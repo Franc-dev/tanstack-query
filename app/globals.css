@@ -1,26 +1,108 @@
-@import "tailwindcss";
+/* app/globals.css */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Import Tailwind directives */
+@import 'tailwindcss';
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* Define custom CSS variables for colors */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --orange-50: #fff7ed;
+    --orange-100: #ffedd5;
+    --orange-200: #fed7aa;
+    --orange-300: #fdba74;
+    --orange-400: #fb923c;
+    --orange-500: #f97316;
+    --orange-600: #ea580c;
+    --orange-700: #c2410c;
+    --orange-800: #9a3412;
+    --orange-900: #7c2d12;
+    --orange-950: #431407;
+  }
+  
+  /* Custom scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f5f5f5;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--orange-500);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--orange-600);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Define custom animations */
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Custom utility classes */
+@layer utilities {
+  /* Custom animation for slower spin */
+  .animate-spin-slow {
+    animation: spin 3s linear infinite;
+  }
+  
+  /* Custom pulse animation for badges */
+  .animate-pulse-soft {
+    animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Custom ticket hover effect */
+  .ticket-hover {
+    transition: all 0.3s ease;
+  }
+  
+  .ticket-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.4);
+  }
+  
+  /* Custom bouncing dots for loading */
+  .loading-dots div {
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+  
+  .loading-dots div:nth-child(1) {
+    animation-delay: 0s;
+  }
+  
+  .loading-dots div:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .loading-dots div:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  /* Box shadow utility */
+  .shadow-orange-glow {
+    box-shadow: 0 0 15px 2px rgba(249, 115, 22, 0.3);
+  }
+  
+  /* Animation utilities */
+  .animate-bounce-slow {
+    animation: bounce 1.5s infinite;
+  }
 }
