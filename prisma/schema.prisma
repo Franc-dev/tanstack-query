@@ -1,33 +1,104 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
+// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql" // Or your preferred database: mysql, sqlite, sqlserver, mongodb
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Ticket {
-  id          String   @id @default(cuid())
+// Model for individual hero slides in a carousel
+model HeroSlide {
+  id          String    @id @default(cuid())
+  // Removed unique identifier, as we can have multiple slides
+  slideLabel  String?   // Optional label for admin UI to identify the slide
   title       String
-  description String?
-  status      Status   @default(OPEN)
-  priority    Priority @default(MEDIUM)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  subtitle    String?
+  ctaText     String?
+  ctaLink     String?
+  imageUrl    String?   // Main image for the slide
+  imageAlt    String?
+  order       Int       @default(0) // To control slide order in the carousel
+  published   Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
-enum Status {
-  OPEN
-  IN_PROGRESS
-  CLOSED
+model NavigationItem {
+  id        String    @id @default(cuid())
+  label     String
+  href      String
+  order     Int
+  parentId  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  parent    NavigationItem?  @relation("NavHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children  NavigationItem[] @relation("NavHierarchy")
+
+  @@index([parentId, order])
 }
 
-enum Priority {
-  LOW
-  MEDIUM
-  HIGH
+model FooterContent {
+  id            String    @id @default(cuid())
+  identifier    String    @unique @default("main_footer") // Keep this for a single footer config
+  copyrightText String
+  links         Json?
+  socialMedia   Json?
+  published     Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
+
+
+model ValuePropositionItem {
+  id          String    @id @default(cuid())
+  title       String
+  imageUrl    String?   // URL for the item's image
+  imageAlt    String?   // Alt text for the image
+  linkUrl     String?   // Optional URL this item links to
+  order       Int       @default(0) // To control display order
+  published   Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([order])
+}
+
+model FeaturedItem {
+  id              String    @id @default(cuid())
+  adminLabel      String?   // Label for easier identification in the admin panel
+  smallHeading    String?   // e.g., "WE'VE GOT YOU COVERED"
+  title           String    // e.g., "We Have More Than Just PCs"
+  description     String?
+  imageUrl        String    // Background image for the feature
+  imageAlt        String?
+  
+  // Store CTAs as a JSON array of objects
+  // Example: [{"text": "Shop Now", "url": "/shop", "variant": "primary"}, {"text": "Learn More", "url": "/learn", "variant": "secondary"}]
+  ctas            Json?     
+  
+  order           Int       @default(0)
+  published       Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([order])
+}
+// If you plan to add users and authentication later
+// model User {
+//   id            String    @id @default(cuid())
+//   email         String    @unique
+//   passwordHash  String
+//   name          String?
+//   role          UserRole  @default(USER)
+//   createdAt     DateTime  @default(now())
+//   updatedAt     DateTime  @updatedAt
+// }
+
+// enum UserRole {
+//   ADMIN
+//   EDITOR
+//   USER
+// }

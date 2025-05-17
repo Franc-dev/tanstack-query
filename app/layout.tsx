@@ -1,28 +1,29 @@
 // app/layout.tsx
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css'; // Ensure Tailwind CSS is imported
-import Providers from './providers'; // Import the TanStack Query Providers
+import Providers from './providers';
+import './globals.css';
+import { Montserrat } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-montserrat'
+});
 
-export const metadata: Metadata = {
-  title: 'TanStack Query Ticket System',
-  description: 'A demo app showcasing TanStack Query with Next.js and Prisma',
+export const metadata = {
+  title: 'My Awesome App | Next.js 15 CMS',
+  description: 'Content managed with a custom Next.js admin panel.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-white text-gray-900 min-h-screen`}>
-        <Providers> {/* Wrap your application with the QueryClientProvider */}
-          <main className="container mx-auto p-4">
-            {children}
-          </main>
+    <html lang="en" className={montserrat.className}>
+      <body className="bg-slate-50 text-slate-800 overflow-x-hidden">
+        <Providers>
+          {children}
         </Providers>
       </body>
     </html>
